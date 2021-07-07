@@ -30,7 +30,7 @@ http.createServer(function(req, res){
   }
 }).listen(3000);
 
-let announcePost = "";
+var announcePostId = "";
 
 client.on('ready', message =>{
   console.log('ready');
@@ -45,6 +45,9 @@ client.on('message', message =>{
      && message.content.match(/コアタイム|コアタイム/) 
      && message.content.match(/告知|告知/)) {
     sendMsg(message.channel.id, "新入生コアタイムだョ！　全員集合！");
+    // store announce post id
+    announcePostId = message.id;
+    console.log(announcePostId);
     return;
   }
   setTimeout(() => {
@@ -56,7 +59,11 @@ client.on('message', message => {
   if (message.author.id == client.user.id || message.author.bot) {
     return ;
   }
-  if (message.isMemberMenmessage.content.match(/チーム分け|チーム分け/))
+  if (message.isMemberMentioned(client.user) 
+      && message.content.match(/チーム分け|チーム分け/)) {
+    // get member who reactioned to announce post id
+    console.log(announcePostId.reaction.fetch());
+  }
 })
 
 if(process.env.DISCORD_BOT_TOKEN == undefined){
