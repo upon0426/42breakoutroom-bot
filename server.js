@@ -30,14 +30,7 @@ http.createServer(function(req, res){
   }
 }).listen(3000);
 
-let userStatus = [];
-
-client.on("presenceUpdate", (oldMember, newMember) => {
-  let username = newMember.user.username;
-  let status = newMember.user.presence.status;
-  userStatus.push(username, status);
-  console.log(`${newMember.user.username} is now ${newMember.user.presence.status}`);
-})
+let announcePost = "";
 
 client.on('ready', message =>{
   console.log('ready');
@@ -54,10 +47,17 @@ client.on('message', message =>{
     sendMsg(message.channel.id, "新入生コアタイムだョ！　全員集合！");
     return;
   }
-  setInterval(() => {
+  setTimeout(() => {
      console.log('interval')
   }, 5000)
 });
+
+client.on('message', message => {
+  if (message.author.id == client.user.id || message.author.bot) {
+    return ;
+  }
+  if (message.isMemberMenmessage.content.match(/チーム分け|チーム分け/))
+})
 
 if(process.env.DISCORD_BOT_TOKEN == undefined){
  console.log('DISCORD_BOT_TOKENが設定されていません。');
