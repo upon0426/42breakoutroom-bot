@@ -46,23 +46,17 @@ client.on('message', message =>{
      && message.content.match(/コアタイム|コアタイム/) 
      && message.content.match(/告知|告知/)) {
     sendMsg(message.channel.id, "新入生コアタイムだョ！　全員集合！");
-    // store announce post id
-    //announcePostId = message.id;
-    //console.log(announcePostId);
-    announcePost = message;
-    
-    // Create a reaction collector
-    const filter = (reaction, user) => reaction.emoji.name === '👌' ;
-    const collector = message.createReactionCollector(filter, { time: 15000 });
-    collector.on('collect', r => console.log(`Collected ${r.emoji.name}`));
-    collector.on('end', collected => console.log(`Collected ${collected.size} items`));    
-    console.log(message.content);
     return;
   }
-  setTimeout(() => {
-     console.log('interval')
-  }, 5000)
 });
+
+client.on('message', message => {
+  if ((message.author.id == client.user.id || message.author.bot)
+     && message.content.match("新入生コアタイムだョ！　全員集合！")) {
+    announcePost = message;
+    return ;
+  }
+})
 
 client.on('message', message => {
   if (message.author.id == client.user.id || message.author.bot) {
@@ -71,7 +65,7 @@ client.on('message', message => {
   if (message.isMemberMentioned(client.user) 
       && message.content.match(/チーム分け|チーム分け/)) {
     // get member who reactioned to announce post id
-    // console.log(announcePostId.reaction.fetch());
+    console.log(announcePost.reactions);
   }
 })
 
