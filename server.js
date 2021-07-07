@@ -66,8 +66,7 @@ client.on('message', message => {
       && message.content.match(/チーム分け|チーム分け/)) {
     // get member who reactioned to announce post id
     //console.log("test" + global.announcePost.content)
-    console.log(global.announcePost.reactions);
-    console.log(global.announcePost.reactions.cache);
+    console.log(global.announcePost.reactions.user);
   }
 })
 
