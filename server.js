@@ -31,7 +31,7 @@ http.createServer(function(req, res){
 }).listen(3000);
 
 var announcePostId = "";
-var announcePost = null;
+global.announcePost = null;
 
 client.on('ready', message =>{
   console.log('ready');
@@ -53,7 +53,7 @@ client.on('message', message =>{
 client.on('message', message => {
   if ((message.author.id == client.user.id || message.author.bot)
      && message.content.match("新入生コアタイムだョ！　全員集合！")) {
-    announcePost = message;
+    global.announcePost = message;
     return ;
   }
 })
@@ -65,7 +65,9 @@ client.on('message', message => {
   if (message.isMemberMentioned(client.user) 
       && message.content.match(/チーム分け|チーム分け/)) {
     // get member who reactioned to announce post id
-    console.log(announcePost.reactions);
+    //console.log("test" + global.announcePost.content)
+    console.log(global.announcePost.reactions);
+    console.log(global.announcePost.reactions.cache);
   }
 })
 
