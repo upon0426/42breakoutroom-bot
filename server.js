@@ -40,16 +40,18 @@ client.on("presenceUpdate", (oldMember, newMember) => {
 })
 
 client.on('ready', message =>{
-  console.log('Bot準備完了～');
-  client.user.setPresence({ game: { name: 'logレコ' } });
+  console.log('ready');
+  client.user.setPresence({ game: { name: 'チーム分け' } });
 });
 
 client.on('message', message =>{
   if (message.author.id == client.user.id || message.author.bot){
     return;
   }
-  if(message.isMemberMentioned(client.user)){
-    sendReply(message, "呼びましたか？");
+  if(message.isMemberMentioned(client.user) 
+     && message.content.match(/コアタイム|コアタイム/) 
+     && message.content.match(/告知|告知/)){
+    sendReply(message, "新入生コアタイムだョ！　全員集合！");
     return;
   }
   if (message.content.match(/にゃ～ん|にゃーん/)){
