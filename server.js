@@ -50,24 +50,13 @@ client.on('message', message =>{
   }
   if(message.isMemberMentioned(client.user) 
      && message.content.match(/コアタイム|コアタイム/) 
-     && message.content.match(/告知|告知/)){
-    sendReply(message, "新入生コアタイムだョ！　全員集合！");
+     && message.content.match(/告知|告知/)) {
+    sendMsg(message.channel.id, "新入生コアタイムだョ！　全員集合！");
     return;
   }
-  if (message.content.match(/にゃ～ん|にゃーん/)){
-    let text = "にゃ～ん";
-    sendMsg(message.channel.id, text);
-    return;
-  }
-  if (message.content === 'ファイトぉー') {
-    message.react('🔥');
-    message.channel.send('いっぱつ！！！');
-    return;
-  }
-  if (message.content === '今は？') {
-    console.log(message.member.presence.status);
-    sendMsg(message.channel.id, message.author.presence.status);
-  }
+  setInterval(() => {
+     console.log('interval')
+  }, 5000)
 });
 
 if(process.env.DISCORD_BOT_TOKEN == undefined){
