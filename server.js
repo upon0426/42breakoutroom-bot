@@ -1,123 +1,88 @@
-/**
-* This is the main Node.js server script for your project
-* Check out the two endpoints this back-end API provides in fastify.get and fastify.post below
-*/
+const http = require('http');
+const querystring = require('querystring');
+const Discord = require('discord.js');
+const client = new Discord.Client();
 
-const path = require("path");
+http.createServer(function(req, res){
+  if (req.method == 'POST'){
+    var data = "";
+    req.on('data', function(chunk){
+      data += chunk;
+    });
+    req.on('end', function(){
+      if(!data){
+        res.end("No post data");
+        return;
+      }
+      var dataObject = querystring.parse(data);
+      console.log("post:" + dataObject.type);
+      if(dataObject.type == "wake"){
+        console.log("Woke up in post");
+        res.end();
+        return;
+      }
+      res.end();
+    });
+  }
+  else if (req.method == 'GET'){
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end('Discord Bot is active now\n');
+  }
+}).listen(3000);
 
-// Require the fastify framework and instantiate it
-const fastify = require("fastify")({
-  // Set this to true for detailed logging:
-  logger: false
+let userStatus = [];
+
+client.on("presenceUpdate", (oldMember, newMember) => {
+  let username = newMember.user.username;
+  let status = newMember.user.presence.status;
+  userStatus.push(username, status);
+  console.log(`${newMember.user.username} is now ${newMember.user.presence.status}`);
+})
+
+client.on('ready', message =>{
+  console.log('Bot準備完了～');
+  client.user.setPresence({ game: { name: 'logレコ' } });
 });
 
-// ADD FAVORITES ARRAY VARIABLE FROM TODO HERE
-
-
-// Setup our static files
-fastify.register(require("fastify-static"), {
-  root: path.join(__dirname, "public"),
-  prefix: "/" // optional: default '/'
-});
-
-// fastify-formbody lets us parse incoming forms
-fastify.register(require("fastify-formbody"));
-
-// point-of-view is a templating manager for fastify
-fastify.register(require("point-of-view"), {
-  engine: {
-    handlebars: require("handlebars")
+client.on('message', message =>{
+  if (message.author.id == client.user.id || message.author.bot){
+    return;
+  }
+  if(message.isMemberMentioned(client.user)){
+    sendReply(message, "呼びましたか？");
+    return;
+  }
+  if (message.content.match(/にゃ～ん|にゃーん/)){
+    let text = "にゃ～ん";
+    sendMsg(message.channel.id, text);
+    return;
+  }
+  if (message.content === 'ファイトぉー') {
+    message.react('🔥');
+    message.channel.send('いっぱつ！！！');
+    return;
+  }
+  if (message.content === '今は？') {
+    console.log(message.member.presence.status);
+    sendMsg(message.channel.id, message.author.presence.status);
   }
 });
 
-// Load and parse SEO data
-const seo = require("./src/seo.json");
-if (seo.url === "glitch-default") {
-  seo.url = `https://${process.env.PROJECT_DOMAIN}.glitch.me`;
+if(process.env.DISCORD_BOT_TOKEN == undefined){
+ console.log('DISCORD_BOT_TOKENが設定されていません。');
+ process.exit(0);
 }
 
-/**
-* Our home page route
-*
-* Returns src/pages/index.hbs with data built into it
-*/
-fastify.get("/", function(request, reply) {
-  
-  // params is an object we'll pass to our handlebars template
-  let params = { seo: seo };
-  
-  // If someone clicked the option for a random color it'll be passed in the querystring
-  if (request.query.randomize) {
-    
-    // We need to load our color data file, pick one at random, and add it to the params
-    const colors = require("./src/colors.json");
-    const allColors = Object.keys(colors);
-    let currentColor = allColors[(allColors.length * Math.random()) << 0];
-    
-    // Add the color properties to the params object
-    params = {
-      color: colors[currentColor],
-      colorError: null,
-      seo: seo
-    };
-  }
-  
-  // The Handlebars code will be able to access the parameter values and build them into the page
-  reply.view("/src/pages/index.hbs", params);
-});
+client.login( process.env.DISCORD_BOT_TOKEN );
 
-/**
-* Our POST route to handle and react to form submissions 
-*
-* Accepts body data indicating the user choice
-*/
-fastify.post("/", function(request, reply) {
-  
-  // Build the params object to pass to the template
-  let params = { seo: seo };
-  
-  // If the user submitted a color through the form it'll be passed here in the request body
-  let color = request.body.color;
-  
-  // If it's not empty, let's try to find the color
-  if (color) {
-    // ADD CODE FROM TODO HERE TO SAVE SUBMITTED FAVORITES
-    
-    // Load our color data file
-    const colors = require("./src/colors.json");
-    
-    // Take our form submission, remove whitespace, and convert to lowercase
-    color = color.toLowerCase().replace(/\s/g, "");
-    
-    // Now we see if that color is a key in our colors object
-    if (colors[color]) {
-      
-      // Found one!
-      params = {
-        color: colors[color],
-        colorError: null,
-        seo: seo
-      };
-    } else {
-      
-      // No luck! Return the user value as the error property
-      params = {
-        colorError: request.body.color,
-        seo: seo
-      };
-    }
-  }
-  
-  // The Handlebars template will use the parameter values to update the page with the chosen color
-  reply.view("/src/pages/index.hbs", params);
-});
+function sendReply(message, text){
+  message.reply(text)
+    .then(console.log("リプライ送信: " + text))
+    .catch(console.error);
+}
 
-// Run the server and report out to the logs
-fastify.listen(process.env.PORT, function(err, address) {
-  if (err) {
-    fastify.log.error(err);
-    process.exit(1);
-  }
-  console.log(`Your app is listening on ${address}`);
-  fastify.log.info(`server listening on ${address}`);
-});
+function sendMsg(channelId, text, option={}){
+  client.channels.get(channelId).send(text, option)
+    .then(console.log("メッセージ送信: " + text + JSON.stringify(option)))
+    .catch(console.error);
+}
