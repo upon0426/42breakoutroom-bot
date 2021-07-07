@@ -31,6 +31,7 @@ http.createServer(function(req, res){
 }).listen(3000);
 
 var announcePostId = "";
+var announcePost = null;
 
 client.on('ready', message =>{
   console.log('ready');
@@ -46,8 +47,16 @@ client.on('message', message =>{
      && message.content.match(/告知|告知/)) {
     sendMsg(message.channel.id, "新入生コアタイムだョ！　全員集合！");
     // store announce post id
-    announcePostId = message.id;
-    console.log(announcePostId);
+    //announcePostId = message.id;
+    //console.log(announcePostId);
+    announcePost = message;
+    
+    // Create a reaction collector
+    const filter = (reaction, user) => reaction.emoji.name === '👌' ;
+    const collector = message.createReactionCollector(filter, { time: 15000 });
+    collector.on('collect', r => console.log(`Collected ${r.emoji.name}`));
+    collector.on('end', collected => console.log(`Collected ${collected.size} items`));    
+    console.log(message.content);
     return;
   }
   setTimeout(() => {
@@ -62,7 +71,7 @@ client.on('message', message => {
   if (message.isMemberMentioned(client.user) 
       && message.content.match(/チーム分け|チーム分け/)) {
     // get member who reactioned to announce post id
-    console.log(announcePostId.reaction.fetch());
+    // console.log(announcePostId.reaction.fetch());
   }
 })
 
