@@ -57,8 +57,17 @@ client.on('message', message => {
     global.rc.on('end', collected =>  {
       const userIds = [ ...collected.get('🆗').users.keys() ];
       console.log(userIds);
-      
-      sendMsg(message.channel.id, "<@" + userIds[0] + ">");
+      var post = "発表します！";
+      console.log(userIds.length;
+      for (var i=0;i<userIds.length;i++) {
+          if (i%3 == 0) {
+              post += `¥n¥n カラ館 ${i/3 + 1}号室`;
+          }  
+          post += " <@" + userIds[i] + "> ";
+
+      }
+      sendMsg(message.channel.id, post);
+
       
     })
     return ;
