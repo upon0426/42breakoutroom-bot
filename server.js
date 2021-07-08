@@ -67,6 +67,7 @@ client.on('message', message => {
     //console.log("test" + global.announcePost.content)
     var data = {};
     const mr = new Discord.MessageReaction(this, data ,global.announcePost);
+    console.log(global.announcePost);
     console.log(mr);
     //console.log(global.announcePost.reactions);
   }
