@@ -48,7 +48,8 @@ client.on('message', message =>{
 });
 
 client.on('message', message => {
-  if ((message.author.id == client.user.id || message.author.bot)
+  if (message.isMentioned(client.user)
+     && message.author.id == client.user.id || message.author.bot
      && message.content.match("新入生コアタイムだョ！　全員集合！")) {
     global.announcePost = message;
     const filter = (reaction ) => reaction.emoji.name === '🆗';
@@ -58,10 +59,9 @@ client.on('message', message => {
       const userIds = [ ...collected.get('🆗').users.keys() ];
       console.log(userIds);
       var post = "発表します！";
-      console.log(userIds.length;
       for (var i=0;i<userIds.length;i++) {
           if (i%3 == 0) {
-              post += `¥n¥n カラ館 ${i/3 + 1}号室`;
+              post += `\n\n カラ館 ${i/3 + 1}号室`;
           }  
           post += " <@" + userIds[i] + "> ";
 
