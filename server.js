@@ -51,10 +51,15 @@ client.on('message', message => {
   if ((message.author.id == client.user.id || message.author.bot)
      && message.content.match("新入生コアタイムだョ！　全員集合！")) {
     global.announcePost = message;
-    const filter = (reaction ) => reaction.emoji.name === '👌';
+    const filter = (reaction ) => reaction.emoji.name === '🆗';
     global.rc = global.announcePost.createReactionCollector(filter, {time : 86400000});
     global.rc.on('collect', r => console.log(r.users));
-    global.rc.on('end', collected => console.log(collected.));
+    global.rc.on('end', collected =>  {
+      const userIds = collected.get('🆗').users.keys();
+      console.log(userIds);
+      messasge.channel.id
+      
+    })
     return ;
   }
 });
