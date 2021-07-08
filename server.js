@@ -3,6 +3,7 @@ const querystring = require('querystring');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
+
 http.createServer(function(req, res){
   if (req.method == 'POST'){
     var data = "";
@@ -66,7 +67,10 @@ client.on('message', message => {
       && message.content.match(/チーム分け|チーム分け/)) {
     // get member who reactioned to announce post id
     //console.log("test" + global.announcePost.content)
-    console.log(global.announcePost.reactions);
+    var data = {};
+    const mr = new Discord.MessageReaction(this, data ,global.announcePost);
+    console.log(mr);
+    //console.log(global.announcePost.reactions);
   }
 });
 
