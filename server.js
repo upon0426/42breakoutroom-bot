@@ -64,8 +64,8 @@ client.on('message', message => {
     // get member who reactioned to announce post id
     const filter = (reaction ) => reaction.emoji.name === '👌';
     const collector = global.announcePost.createReactionCollector(filter, {time : 150000});
-    collector.on('collect', r => console.log(`Collected ${r.users}`));
-    collector.on('end', collected => console.log(`Collected ${collected.size} items`));
+    collector.on('collect', r => console.log(r));
+    collector.on('end', collected => console.log(collected));
   }
 });
 
