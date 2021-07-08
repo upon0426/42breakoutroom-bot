@@ -3,7 +3,6 @@ const querystring = require('querystring');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-
 http.createServer(function(req, res){
   if (req.method == 'POST'){
     var data = "";
@@ -31,7 +30,6 @@ http.createServer(function(req, res){
   }
 }).listen(3000);
 
-var announcePostId = "";
 global.announcePost = null;
 
 client.on('ready', message =>{
