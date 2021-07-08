@@ -64,12 +64,9 @@ client.on('message', message => {
   if (message.isMemberMentioned(client.user) 
       && message.content.match(/チーム分け|チーム分け/)) {
     // get member who reactioned to announce post id
-    //console.log("test" + global.announcePost.content)
-    var data = {};
-    const mr = new Discord.MessageReaction(this, data ,global.announcePost);
+
     console.log(global.announcePost);
-    console.log(mr);
-    //console.log(global.announcePost.reactions);
+    
   }
 });
 
