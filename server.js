@@ -33,7 +33,7 @@ http.createServer(function(req, res){
 global.announcePost = null;
 
 client.on('ready', message =>{
-  console.log('ready');
+  console.log(Discord.version);
   client.user.setPresence({ game: { name: 'チーム分け' } });
 });
 
@@ -41,8 +41,7 @@ client.on('message', message =>{
   if (message.author.id == client.user.id || message.author.bot){
     return;
   }
-  if(message.isMemberMentioned(client.user) 
-     && message.content.match(/コアタイム|コアタイム/) 
+  if(message.content.match(/コアタイム|コアタイム/) 
      && message.content.match(/告知|告知/)) {
     sendMsg(message.channel.id, "新入生コアタイムだョ！　全員集合！");
     return;
@@ -61,12 +60,15 @@ client.on('message', message => {
   if (message.author.id == client.user.id || message.author.bot) {
     return ;
   }
-  if (message.isMemberMentioned(client.user) 
-      && message.content.match(/チーム分け|チーム分け/)) {
+  if (message.content.match(/チーム分け|チーム分け/)) {
     // get member who reactioned to announce post id
-
-    console.log(global.announcePost);
+    var data = {};
+    const mr = new Discord.MessageReaction(this, data ,global.announcePost);
     
+    console.log(mr.users.fetch());
+    //console.log(global.announcePost);
+    //console.log(mr);
+    //console.log(global.announcePost.reactions);
   }
 });
 
