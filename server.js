@@ -55,9 +55,10 @@ client.on('message', message => {
     global.rc = global.announcePost.createReactionCollector(filter, {time : 86400000});
     global.rc.on('collect', r => console.log(r.users));
     global.rc.on('end', collected =>  {
-      const userIds = collected.get('🆗').users.keys();
+      const userIds = [ ...collected.get('🆗').users.keys() ];
       console.log(userIds);
-      messasge.channel.id
+      
+      sendMsg(message.channel.id, "<@" + userIds[0] + ">");
       
     })
     return ;
