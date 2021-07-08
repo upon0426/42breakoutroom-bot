@@ -52,6 +52,10 @@ client.on('message', message => {
   if ((message.author.id == client.user.id || message.author.bot)
      && message.content.match("新入生コアタイムだョ！　全員集合！")) {
     global.announcePost = message;
+    const filter = (reaction ) => reaction.emoji.name === '👌';
+    global.reacCollec = global.announcePost.createReactionCollector(filter, {time : 86400000});
+    reacCollec.on('collect', r => console.log(r.users));
+    reacColec.on('end', collected => console.log(collected.users));
     return ;
   }
 });
@@ -62,10 +66,9 @@ client.on('message', message => {
   }
   if (message.content.match(/チーム分け|チーム分け/)) {
     // get member who reactioned to announce post id
-    const filter = (reaction ) => reaction.emoji.name === '👌';
-    const collector = global.announcePost.createReactionCollector(filter, {time : 150000});
-    collector.on('collect', r => console.log(r));
-    collector.on('end', collected => console.log(collected));
+    const collector = 
+
+    collector.stop();
   }
 });
 
