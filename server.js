@@ -48,8 +48,7 @@ client.on('message', message =>{
 });
 
 client.on('message', message => {
-  if (message.isMentioned(client.user)
-     && message.author.id == client.user.id || message.author.bot
+  if (message.author.id == client.user.id || message.author.bot
      && message.content.match("新入生コアタイムだョ！　全員集合！")) {
     global.announcePost = message;
     const filter = (reaction ) => reaction.emoji.name === '🆗';
