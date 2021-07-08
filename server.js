@@ -62,10 +62,11 @@ client.on('message', message => {
   }
   if (message.content.match(/チーム分け|チーム分け/)) {
     // get member who reactioned to announce post id
-    var data = {};
-    const mr = new Discord.MessageReaction(this, data ,global.announcePost);
-    
-    console.log(mr.users.fetch());
+    const filter = (reaction ) => reaction.emoji.name === '👌';
+    const collector = message.createReactionCollector(filter, {time : 15000});
+    collector.on('collect', r => console.log(`Collected ${r.emoji.name}`));
+    collector.on('end', collected => console.log(`Collected ${colle`))
+    console.log(mr);
     //console.log(global.announcePost);
     //console.log(mr);
     //console.log(global.announcePost.reactions);
